@@ -1,0 +1,20 @@
+body {
+  padding: 0px;
+  margin:0px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.card image{
+  max-height: 160px;
+}
+
+.card-body a{
+
+}
+.price{
+  padding-right: 40px;
+}
