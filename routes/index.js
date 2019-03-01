@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
 const Products = require('../models/product');
-
+const csrf = require('csurf');
+let csrfProtection = csrf({ cookie: true })
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/',csrfProtection, function(req, res, next) {
 
   Products.find({},function (err ,data) {
     if(err){
@@ -17,7 +18,7 @@ router.get('/', function(req, res, next) {
         productChunks.push(data.splice(i,i+chunkSize));
       }
       console.log(productChunks)
-      res.render('shop/index',{products:productChunks});
+      res.render('shop/index',{products:productChunks,csrfToken:req.csrfToken()});
     }
   })
   // res.render('shop/index', { title: 'Express' });
