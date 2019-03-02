@@ -43,6 +43,7 @@ app.use(session({secret:"its very secret",
       cookie: {secret:true}
 
   }));
+app.use(require('body-parser').urlencoded({extended: true}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());

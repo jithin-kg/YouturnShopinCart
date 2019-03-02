@@ -17,8 +17,9 @@ router.post('/signup',passport.authenticate('local.signup',{
     successRedirect: "/profile",
     failureRedirect: "/users/signup",
     failureFlash : true
-  }
-));
+  }),function (req , res) {
+  console.log(req.body);
+});
 
 
 router.get('/profile',function (req, res) {

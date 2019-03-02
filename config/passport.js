@@ -38,7 +38,6 @@ passport.use('local.signup',new localStrategy({
 
           return done(null, false, {message: "Email already in use. "});
       }
-      console.log("crating new user passport user singup")
 
       let newUser = new User();
       newUser.email =  email;
