@@ -6,7 +6,9 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const csrf = require('csurf');
-const session = require('expres')
+const session = require('express-session');
+const flash = require('connect-flash');
+const passport = require('passport');
 
 
 
@@ -17,9 +19,12 @@ const hbs = require('hbs');
 const app = express();
 
 mongoose.connect("mongodb://localhost:27017/ShoppingCart",{useNewUrlParser:true});
+require('./config/passport') // load passport config file
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+app.set('trust proxy',1);
 
 hbs.registerPartials(path.join(__dirname,'/views/partials'));
 
@@ -32,6 +37,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({secret:"its very secret",
+      resave:false,
+      saveUninitialized:true,
+      cookie: {secret:true}
+
+  }));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

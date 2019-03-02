@@ -1,11 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+
 const Products = require('../models/product');
-const csrf = require('csurf');
-let csrfProtection = csrf({ cookie: true })
+
+
 
 /* GET home page. */
-router.get('/',csrfProtection, function(req, res, next) {
+router.get('/',function(req, res, next) {
 
   Products.find({},function (err ,data) {
     if(err){
@@ -17,8 +19,8 @@ router.get('/',csrfProtection, function(req, res, next) {
       for(let i=0;i<data.length;i+=chunkSize){
         productChunks.push(data.splice(i,i+chunkSize));
       }
-      console.log(productChunks)
-      res.render('shop/index',{products:productChunks,csrfToken:req.csrfToken()});
+      // console.log(productChunks)
+      res.render('shop/index',{products:productChunks});
     }
   })
   // res.render('shop/index', { title: 'Express' });
