@@ -4,8 +4,11 @@ const csrf = require('csurf');
 let csrfProtection = csrf({ cookie: true })
 const passport = require('passport')
 
+const passportConfig = require('../config/passport');
 
-router.use(csrfProtection);//to let all route use csrf protection
+ router.use(csrfProtection);//to let all route use csrf protection
+
+// passport.use(passportConfig,passportConfig.);
 
 /* GET users listing. */
 router.get('/signup', function(req, res, next) {
@@ -13,12 +16,13 @@ router.get('/signup', function(req, res, next) {
 });
 
 
-router.post('/signup',passport.authenticate('local.signup',{
-    successRedirect: "/profile",
+router.post('/signup',function (req, res, next) {
+ console.log(req.body);
+  passport.authenticate('local.signup',{
+    successRedirect: "/users/profile",
     failureRedirect: "/users/signup",
     failureFlash : true
-  }),function (req , res) {
-  console.log(req.body);
+  })(req,res,next);
 });
 
 

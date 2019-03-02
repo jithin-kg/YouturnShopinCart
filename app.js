@@ -19,7 +19,7 @@ const hbs = require('hbs');
 const app = express();
 
 mongoose.connect("mongodb://localhost:27017/ShoppingCart",{useNewUrlParser:true});
-require('./config/passport') // load passport config file
+require('./config/passport'); // load passport config file
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,6 +34,7 @@ let parseForm = bodyParser.urlencoded({ extended: false })
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(require('body-parser').urlencoded({extended: true}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -43,7 +44,7 @@ app.use(session({secret:"its very secret",
       cookie: {secret:true}
 
   }));
-app.use(require('body-parser').urlencoded({extended: true}));
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
