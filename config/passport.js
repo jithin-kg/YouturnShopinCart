@@ -22,60 +22,23 @@ passport.deserializeUser(function (id, done) {
 
 //signup config
 
-// passport.use('local.signup',new localStrategy({
-//     userNameField: "phoneNumber",
-//     passwordField : "password",
-//     passReqToCallback: true
-// },function ( userName, password, done ) {
-//     console.log("inside passport")
-//   User.findOne({"email": email},function (err, data) {
-//       if(err){
-//           console.log("Error while passport user singup")
-//
-//           return done(err);
-//       }
-//       if(user){
-//           console.log("user already exist in passport singup")
-//
-//           return done(null, false, {message: "Email already in use. "});
-//       }
-//
-//       let newUser = new User();
-//       newUser.email =  email;
-//       newUser.password = newUser.encryptPassword(password);
-//
-//       newUser.save(function (err, data) {
-//           if(err){
-//               return done(err);
-//           }
-//           return done(null, newUser);
-//       })
-//
-//   })
-//
-// }))
+
 passport.use('local.signup', new LocalStrategy({
     usernameField:'email',
     passwordField:'password',
     passReqToCallback:true
 }, function(req, email, password, done){
-    // req.checkBody('email','invalid email').notEmpty().isEmail();//validation
-   //  req.checkBody('password','invalid password').notEmpty().isLength({min:4});
-   // //  var errors = req.validationErrors();
-   //  if(errors){
-   //      var messages = [];
-   //      errors.forEach(function (error) {
-   //          messages.push(error.msg);
-   //      });
-   //      return done(null, false,req.flash('error',messages));
-   //  }
+
+    // req.checkBody('email',"Invalid Email").isEmpty().isEmail();
+    // req.checkBody('password',"Invalid Password").isEmpty().isLength({min:5});
+
     User.findOne({'email':email},function (err,user) {
         if (err) {
             console.log("Error");
             return done(err);
         }
         if (user) {
-            return done(null,false,{message:'email already in use !'});
+            return done(null,false,{messages:'email already in use !'});
         }
         var newUser = new User();
         newUser.email = email;
@@ -101,3 +64,25 @@ passport.use('local.signup', new LocalStrategy({
 
     });
 }));
+
+
+//user login
+passport.use('local.login',new LocalStrategy({
+    usernameField:'email',
+    passwordField:'password',
+    passReqToCallback:true
+},function (req, email, password, done) {
+    User.findOne({'email':email},function ( err, user  ) {
+        if(err){
+            return done(err);
+        }
+        if(!user){
+            return done(null,false);
+
+        }
+        if(!user.validatePassword()){
+            return done(null,false);
+        }
+        return done(null, user);
+    })
+}))

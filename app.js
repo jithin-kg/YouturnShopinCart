@@ -9,8 +9,7 @@ const csrf = require('csurf');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
-
-
+const validator = require('express-validator');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -36,6 +35,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(require('body-parser').urlencoded({extended: true}));
 app.use(express.urlencoded({ extended: false }));
+// app.use()
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret:"its very secret",
