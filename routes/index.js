@@ -44,4 +44,13 @@ router.get('/addToCart/:id',function (req, res ,next) {
 
 })
 
+
+router.get('/viewCart', function (req, res, next) {
+  if( !req.session.cart ){
+    res.render('shop/shopingCart', {products: null});
+  }
+
+  let cart = new Cart(req.session.cart);
+  res.render('shop/shopingCart', {products: cart.generateArray(), totalPrice: cart.totalPrice})
+})
 module.exports = router;

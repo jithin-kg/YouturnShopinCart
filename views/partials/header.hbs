@@ -17,7 +17,8 @@
 
         <ul class="navbar-nav ml-auto" style="list-style-type: none;">
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-cart-arrow-down"> </i> Shopping cart</a>
+                <a class="nav-link" href="/viewCart"><i class="fas fa-cart-arrow-down"> </i> Shopping cart<span class="badge badge-info">  {{session.cart.totalQty}}</span></a>
+
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
