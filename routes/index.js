@@ -47,10 +47,19 @@ router.get('/addToCart/:id',function (req, res ,next) {
 
 router.get('/viewCart', function (req, res, next) {
   if( !req.session.cart ){
-    res.render('shop/shopingCart', {products: null});
+   return res.render('shop/shopingCart', {products: null});
   }
 
   let cart = new Cart(req.session.cart);
   res.render('shop/shopingCart', {products: cart.generateArray(), totalPrice: cart.totalPrice})
+});
+
+router.get('/checkout', function (req, res, next) {
+  if( !req.session.cart ){
+    return res.redirect('/viewCart');
+  }
+    let cart = new Cart(req.session.cart);
+    res.render('shop/checkout',{total: cart.totalPrice})
+
 })
 module.exports = router;
