@@ -1,25 +1,11 @@
-var stripe = Stripe('pk_test_hTfcmCAO9w9czLIJI3vdomHH');
+var Stripe = Stripe('pk_test_hTfcmCAO9w9czLIJI3vdomHH');
 
 var $form = $("#checkoutForm");
 
 $form.submit(function (event) {
+    console.log("Its jquery");
+    event.preventDefault();
     $form.find('button').prop('disabled', true);
-    // stripe.createToken('card', {
-    //     // country: ,
-    //     // currency: 'usd',
-    //     // routing_number: '110000000',
-    //     // account_number: '000123456789',
-    //     // account_holder_name: 'Jenny Rosen',
-    //     // account_holder_type: 'individual',
-    //     number: $('#cardNumber').val(),
-    //     cvc: $('#cvc').val(),
-    //     exp_month: $('#expireMonth').val(),
-    //     exp_year: $('#expireYear').val(),
-    //     name: $('#cardHolderName').val()
-    // }).then(function(result) {
-    //
-    //     // Handle result.error or result.token
-    // });
 
     Stripe.card.createToken({
         number: $('#checkoutForm').val(),
@@ -28,6 +14,7 @@ $form.submit(function (event) {
         exp_year: $('#checkoutForm').val(),
         name: $('#cardHolderName').val()
     }, stripeResponseHandler);
+
     return false;
 });
 
@@ -54,3 +41,7 @@ function stripeResponseHandler(status, response) {
 
     }
 }
+//
+// document.getElementById("checkoutBtn").onclick = function () {
+//     console.log("hiiiiiiiiiii");
+// }

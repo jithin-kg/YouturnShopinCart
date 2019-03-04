@@ -1,11 +1,29 @@
-<form method="post" action="/checkout">
+
+
+
+
+
+
+<html>
+<head>
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <!--<script src="/javascripts/checkout.js"></script>-->
+
+</head>
+<body>
+<div id="chargeError" class="d-none alert alert-danger">
+</div>
+<form method="post" action="/checkout" id="checkoutForm">
 
     <div class="col--md-4">
         <h1>Checkout</h1>
-    <h4> total {{total}}</h4>
+        <h4> total {{total}}</h4>
     </div>
+
+
+
     <div class="form-group">
-        <label for="exampleInputEmail1">name address</label>
+        <label for="exampleInputEmail1">name </label>
         <input type="text" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter email">
         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
     </div>
@@ -16,19 +34,23 @@
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Card holder name</label>
-        <input type="text" name="address" class="form-control" id="cardHolderName" placeholder="Password">
+        <input type="text" name="cardHolderName" class="form-control" id="cardHolderName" placeholder="cardHolderName">
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">creadit card no</label>
-        <input type="text" name="address" class="form-control" id="cardNumber" placeholder="Password">
+        <input type="text" name="cardNumber" class="form-control" id="cardNumber" placeholder="Password">
     </div>
     <div class="form-group">
-        <label for="exampleInputPassword1">Expiration of credit card</label>
-        <input type="text" name="address" class="form-control" id="expirationDate" placeholder="Password">
+        <label for="exampleInputPassword1">Expiration month</label>
+        <input type="text" name="expireMonth" class="form-control" id="expireMonth" placeholder="Expiration month">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Expiration year</label>
+        <input type="text" name="expireYear" class="form-control" id="expireYear" placeholder="Expiration year">
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">CVC</label>
-        <input type="text" name="address" class="form-control" id="cvc" placeholder="Password">
+        <input type="text" name="cvc" id="cvc"class="form-control" id="cvc" placeholder="Password">
     </div>
 
     <div class="form-check">
@@ -37,5 +59,56 @@
 
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <button type="submit"  id="checkoutBtn" class="btn btn-primary">Submit</button>
 </form>
+
+<script>
+    Stripe.setPublishableKey('pk_test_hTfcmCAO9w9czLIJI3vdomHH');
+
+    var $form = $("#checkoutForm");
+console.log(Stripe);
+    $form.submit(function (event) {
+        console.log("Its jquery");
+    event.preventDefault();
+        $form.find('button').prop('disabled', true);
+
+        Stripe.card.createToken({
+            number: $('#cardNumber').val(),
+            cvc: $('#cvc').val(),
+            exp_month: $('#expireMonth').val(),
+            exp_year: $('#expireYear').val(),
+            name: $('#name').val()
+        }, stripeResponseHandler);
+        // return false;
+    });
+
+
+    function stripeResponseHandler(status, response) {
+
+        if (response.error) { // Problem!
+
+            // Show the errors on the form
+            $('#chargeError').text(response.error.message);
+            $('#chargeError').removeClass('d-none')
+
+            $('button').prop('disabled', false); // Re-enable submission
+
+        } else { // Token was created!
+
+            // Get the token ID:
+            var token = response.id;
+
+            // Insert the token into the form so it gets submitted to the server:
+            $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+
+            // Submit the form:
+            $form.get(0).submit();
+
+        }
+    }
+</script>
+</body>
+</html>
+
+
